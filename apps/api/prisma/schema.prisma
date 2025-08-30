@@ -1,0 +1,301 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User and Authentication
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  role      UserRole @default(VIEWER)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  auditLogs AuditLog[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  OPERATOR
+  VIEWER
+}
+
+// Calendar Events
+model CalendarEvent {
+  id              String           @id @default(cuid())
+  title           String
+  description     String?
+  startDate       DateTime
+  endDate         DateTime
+  eventType       EventType
+  priority        Priority         @default(MEDIUM)
+  assetId         String?
+  contractId      String?
+  lifecycleBucket LifecycleBucket  @default(ACTIVE)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  asset    Asset?    @relation(fields: [assetId], references: [id])
+  contract Contract? @relation(fields: [contractId], references: [id])
+
+  @@map("calendar_events")
+}
+
+enum EventType {
+  MAINTENANCE
+  DEPLOYMENT
+  RETIREMENT
+  VULNERABILITY
+  CONTRACT_RENEWAL
+  COMPLIANCE
+  OTHER
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+// Assets
+model Asset {
+  id              String          @id @default(cuid())
+  name            String
+  type            String
+  model           String
+  serialNumber    String?
+  purchaseDate    DateTime?
+  warrantyExpiry  DateTime?
+  status          AssetStatus     @default(ACTIVE)
+  contractId      String?
+  lifecycleBucket LifecycleBucket @default(ACTIVE)
+  riskScore       Int             @default(0)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  contract              Contract?              @relation(fields: [contractId], references: [id])
+  calendarEvents        CalendarEvent[]
+  vulnerabilityFindings VulnerabilityFinding[]
+
+  @@map("assets")
+}
+
+enum AssetStatus {
+  ACTIVE
+  MAINTENANCE
+  RETIRED
+  DISPOSED
+}
+
+// Contracts
+model Contract {
+  id                   String         @id @default(cuid())
+  vendor               String
+  contractNumber       String         @unique
+  startDate            DateTime
+  endDate              DateTime
+  value                Decimal
+  status               ContractStatus @default(ACTIVE)
+  renewalNoticeMonths  Int            @default(3)
+  createdAt            DateTime       @default(now())
+  updatedAt            DateTime       @updatedAt
+
+  assets         Asset[]
+  calendarEvents CalendarEvent[]
+
+  @@map("contracts")
+}
+
+enum ContractStatus {
+  ACTIVE
+  EXPIRED
+  TERMINATED
+  PENDING
+}
+
+// Lifecycle Management
+model LifecycleCatalogEntry {
+  id           String           @id @default(cuid())
+  vendor       String
+  product      String
+  version      String
+  releaseDate  DateTime?
+  endOfSupport DateTime?
+  endOfLife    DateTime?
+  bucket       LifecycleBucket  @default(ACTIVE)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@unique([vendor, product, version])
+  @@map("lifecycle_catalog")
+}
+
+enum LifecycleBucket {
+  NEW
+  ACTIVE
+  MATURE
+  LEGACY
+  EOL
+}
+
+// Vulnerabilities
+model Vulnerability {
+  id            String                  @id @default(cuid())
+  cveId         String                  @unique
+  title         String
+  description   String
+  severity      VulnerabilitySeverity
+  cvssScore     Decimal
+  publishedDate DateTime
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+
+  findings VulnerabilityFinding[]
+
+  @@map("vulnerabilities")
+}
+
+enum VulnerabilitySeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model VulnerabilityFinding {
+  id              String        @id @default(cuid())
+  vulnerabilityId String
+  assetId         String
+  status          FindingStatus @default(OPEN)
+  discoveredAt    DateTime      @default(now())
+  resolvedAt      DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  vulnerability Vulnerability @relation(fields: [vulnerabilityId], references: [id])
+  asset         Asset         @relation(fields: [assetId], references: [id])
+
+  @@unique([vulnerabilityId, assetId])
+  @@map("vulnerability_findings")
+}
+
+enum FindingStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  FALSE_POSITIVE
+}
+
+// Alerts and Notifications
+model Alert {
+  id             String        @id @default(cuid())
+  title          String
+  message        String
+  type           AlertType
+  severity       AlertSeverity @default(INFO)
+  targetRoles    UserRole[]
+  scheduleType   ScheduleType  @default(IMMEDIATE)
+  scheduleConfig Json          @default("{}")
+  isActive       Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@map("alerts")
+}
+
+enum AlertType {
+  CONTRACT_EXPIRY
+  VULNERABILITY
+  LIFECYCLE
+  MAINTENANCE
+  COMPLIANCE
+}
+
+enum AlertSeverity {
+  INFO
+  WARNING
+  ERROR
+}
+
+enum ScheduleType {
+  IMMEDIATE
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+// Settings
+model Setting {
+  id          String          @id @default(cuid())
+  key         String          @unique
+  value       String
+  description String?
+  category    SettingCategory @default(GENERAL)
+  isSecret    Boolean         @default(false)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@map("settings")
+}
+
+enum SettingCategory {
+  GENERAL
+  AUTH
+  NOTIFICATIONS
+  INTEGRATIONS
+  AI
+}
+
+// Jobs and Background Tasks
+model Job {
+  id          String    @id @default(cuid())
+  name        String
+  status      JobStatus @default(PENDING)
+  startedAt   DateTime?
+  completedAt DateTime?
+  error       String?
+  metadata    Json      @default("{}")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("jobs")
+}
+
+enum JobStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+}
+
+// Audit Logs
+model AuditLog {
+  id         String    @id @default(cuid())
+  userId     String
+  action     String
+  resource   String
+  resourceId String?
+  oldValues  Json?
+  newValues  Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}

@@ -1,0 +1,39 @@
+{
+  "name": "@fleetops/calendar-monorepo",
+  "version": "1.0.0",
+  "description": "FleetOps Calendar - Enterprise Operational Calendar Tool",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "scripts": {
+    "build": "pnpm --recursive run build",
+    "dev": "pnpm --recursive --parallel run dev",
+    "lint": "pnpm --recursive run lint",
+    "lint:fix": "pnpm --recursive run lint:fix",
+    "test": "pnpm --recursive run test",
+    "typecheck": "pnpm --recursive run typecheck",
+    "clean": "pnpm --recursive run clean",
+    "api": "pnpm --filter @fleetops/api run dev",
+    "web": "pnpm --filter @fleetops/frontend run dev",
+    "db:generate": "pnpm --filter @fleetops/api run db:generate",
+    "db:push": "pnpm --filter @fleetops/api run db:push",
+    "db:seed": "pnpm --filter @fleetops/api run db:seed"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^5.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.1.0"
+  },
+  "packageManager": "pnpm@8.6.0"
+}
