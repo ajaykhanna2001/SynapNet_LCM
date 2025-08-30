@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: fleetops-postgres
+    environment:
+      POSTGRES_DB: fleetops_calendar
+      POSTGRES_USER: fleetops
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: fleetops-api
+    environment:
+      DATABASE_URL: "postgresql://fleetops:password@postgres:5432/fleetops_calendar"
+      JWT_SECRET: "your-jwt-secret-key-change-in-production"
+      JWT_EXPIRES_IN: "24h"
+      API_PORT: 8080
+      NODE_ENV: development
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    volumes:
+      - ./apps/api:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile
+    container_name: fleetops-web
+    environment:
+      VITE_API_URL: http://localhost:8080/api
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    volumes:
+      - ./apps/frontend:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
