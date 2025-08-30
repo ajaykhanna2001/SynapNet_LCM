@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
-import { UserRole, EventType, Priority, LifecycleBucket, AssetStatus, ContractStatus } from '@fleetops/shared';
+import { UserRole, EventType, Priority, LifecycleBucket, AssetStatus, ContractStatus, SettingCategory } from '@fleetops/shared';
 
 const prisma = new PrismaClient();
 
@@ -225,21 +225,21 @@ async function main() {
       key: 'smtp_host',
       value: 'smtp.company.com',
       description: 'SMTP server hostname for email notifications',
-      category: 'NOTIFICATIONS',
+      category: SettingCategory.NOTIFICATIONS,
       isSecret: false,
     },
     {
       key: 'contract_renewal_notice_days',
       value: '90',
       description: 'Days before contract expiry to send renewal notice',
-      category: 'GENERAL',
+      category: SettingCategory.GENERAL,
       isSecret: false,
     },
     {
       key: 'vulnerability_scan_frequency',
       value: 'daily',
       description: 'Frequency of vulnerability scans',
-      category: 'GENERAL',
+      category: SettingCategory.GENERAL,
       isSecret: false,
     },
   ];
