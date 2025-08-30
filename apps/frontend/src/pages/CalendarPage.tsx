@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useQuery } from 'react-query'
-import { calendarService } from '../services/api'
 import { EventType } from '@fleetops/shared'
+
+import { calendarService } from '../services/api'
 
 const CalendarPage: React.FC = () => {
   const [eventTypeFilter, setEventTypeFilter] = useState<EventType | ''>('')

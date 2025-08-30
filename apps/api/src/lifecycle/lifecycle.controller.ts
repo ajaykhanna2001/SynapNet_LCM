@@ -1,10 +1,12 @@
 import { Controller, Get, Post, UseGuards, Query, Body } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { LifecycleService } from './lifecycle.service';
 import { UserRole } from '@fleetops/shared';
+
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
+
+import { LifecycleService } from './lifecycle.service';
 
 @ApiTags('lifecycle')
 @Controller('lifecycle')

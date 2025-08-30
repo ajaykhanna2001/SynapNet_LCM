@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
+
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
@@ -16,7 +17,7 @@ export class AuthService {
     });
     
     if (user && await bcrypt.compare(password, user.password)) {
-      const { password: _, ...result } = user;
+      const { password: _password, ...result } = user;
       return result;
     }
     return null;

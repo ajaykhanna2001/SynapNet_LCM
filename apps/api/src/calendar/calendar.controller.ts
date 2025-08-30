@@ -13,10 +13,12 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { Response } from 'express';
-import { CalendarService } from './calendar.service';
 import { EventType, Priority, UserRole } from '@fleetops/shared';
+
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
+
+import { CalendarService } from './calendar.service';
 
 @ApiTags('calendar')
 @Controller('calendar')

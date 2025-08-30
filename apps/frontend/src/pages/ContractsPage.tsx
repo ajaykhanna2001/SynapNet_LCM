@@ -1,5 +1,6 @@
 import React from 'react'
 import { useQuery } from 'react-query'
+
 import { contractsService } from '../services/api'
 
 const ContractsPage: React.FC = () => {

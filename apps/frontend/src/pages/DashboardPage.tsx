@@ -1,5 +1,6 @@
 import React from 'react'
 import { useQuery } from 'react-query'
+
 import { calendarService, contractsService, assetsService } from '../services/api'
 
 const DashboardPage: React.FC = () => {

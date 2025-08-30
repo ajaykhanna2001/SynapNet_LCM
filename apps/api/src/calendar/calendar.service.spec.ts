@@ -1,7 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { CalendarService } from './calendar.service';
-import { PrismaService } from '../prisma/prisma.service';
 import { LifecycleBucket, calculateLifecycleBucket } from '@fleetops/shared';
+
+import { PrismaService } from '../prisma/prisma.service';
+
+import { CalendarService } from './calendar.service';
 
 describe('CalendarService', () => {
   let service: CalendarService;

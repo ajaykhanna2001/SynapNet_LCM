@@ -1,6 +1,7 @@
 import { Controller, Get, UseGuards, Query } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+
 import { AssetsService } from './assets.service';
 
 @ApiTags('assets')

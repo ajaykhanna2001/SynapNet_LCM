@@ -1,5 +1,6 @@
 import React from 'react'
 import { useQuery } from 'react-query'
+
 import { lifecycleService } from '../services/api'
 
 const LifecyclePage: React.FC = () => {

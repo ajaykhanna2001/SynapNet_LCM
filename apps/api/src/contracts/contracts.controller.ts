@@ -11,10 +11,12 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { ContractsService } from './contracts.service';
 import { ContractStatus, UserRole } from '@fleetops/shared';
+
 import { Roles } from '../common/decorators/roles.decorator';
 import { RolesGuard } from '../common/guards/roles.guard';
+
+import { ContractsService } from './contracts.service';
 
 @ApiTags('contracts')
 @Controller('contracts')

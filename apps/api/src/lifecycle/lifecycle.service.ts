@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { calculateLifecycleBucket } from '@fleetops/shared';
+
 import { PrismaService } from '../prisma/prisma.service';
-import { LifecycleBucket, calculateLifecycleBucket } from '@fleetops/shared';
 
 @Injectable()
 export class LifecycleService {

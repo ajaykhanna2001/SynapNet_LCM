@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { EventType, Priority, LifecycleBucket } from '@fleetops/shared';
+
 import { PrismaService } from '../prisma/prisma.service';
-import { EventType, Priority, LifecycleBucket, calculateLifecycleBucket } from '@fleetops/shared';
 
 @Injectable()
 export class CalendarService {

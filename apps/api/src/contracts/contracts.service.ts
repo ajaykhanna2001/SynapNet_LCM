@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
 import { ContractStatus } from '@fleetops/shared';
+
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class ContractsService {
