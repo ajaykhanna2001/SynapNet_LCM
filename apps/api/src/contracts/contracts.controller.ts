@@ -70,7 +70,7 @@ export class ContractsController {
       renewalNoticeMonths: number;
     }>,
   ) {
-    const data = { ...updateContractDto };
+    const data = { ...updateContractDto } as any;
     if (updateContractDto.startDate) {
       (data as any).startDate = new Date(updateContractDto.startDate);
     }

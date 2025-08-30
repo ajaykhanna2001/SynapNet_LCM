@@ -1,7 +1,7 @@
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import { ApiResponse, PaginatedResponse } from '@fleetops/shared'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api'
+const API_BASE_URL = (import.meta as any).env?.VITE_API_URL || 'http://localhost:8080/api'
 
 const api = axios.create({
   baseURL: API_BASE_URL,

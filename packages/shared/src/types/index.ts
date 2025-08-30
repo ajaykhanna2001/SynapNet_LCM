@@ -217,7 +217,12 @@ export interface ApiResponse<T = any> {
   message?: string;
 }
 
-export interface PaginatedResponse<T> extends ApiResponse<T[]> {
+export interface PaginatedResponse<T> {
+  data?: T[];
+  events?: T[]; // For calendar events
+  contracts?: T[]; // For contracts  
+  entries?: T[]; // For lifecycle entries
+  assets?: T[]; // For assets
   pagination: {
     page: number;
     limit: number;

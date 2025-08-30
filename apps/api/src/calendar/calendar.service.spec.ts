@@ -72,7 +72,7 @@ describe('CalendarService', () => {
   describe('lifecycle bucket calculation', () => {
     it('should calculate NEW bucket for recent releases', () => {
       const releaseDate = new Date();
-      releaseDate.setMonths(releaseDate.getMonth() - 6); // 6 months ago
+      releaseDate.setMonth(releaseDate.getMonth() - 6); // 6 months ago
 
       const bucket = calculateLifecycleBucket(releaseDate);
       expect(bucket).toBe(LifecycleBucket.NEW);
@@ -99,7 +99,7 @@ describe('CalendarService', () => {
       releaseDate.setFullYear(releaseDate.getFullYear() - 5);
       
       const endOfLife = new Date();
-      endOfLife.setMonths(endOfLife.getMonth() - 1); // 1 month ago
+      endOfLife.setMonth(endOfLife.getMonth() - 1); // 1 month ago
 
       const bucket = calculateLifecycleBucket(releaseDate, undefined, endOfLife);
       expect(bucket).toBe(LifecycleBucket.EOL);
@@ -110,7 +110,7 @@ describe('CalendarService', () => {
       releaseDate.setFullYear(releaseDate.getFullYear() - 3);
       
       const endOfLife = new Date();
-      endOfLife.setMonths(endOfLife.getMonth() + 3); // 3 months from now
+      endOfLife.setMonth(endOfLife.getMonth() + 3); // 3 months from now
 
       const bucket = calculateLifecycleBucket(releaseDate, undefined, endOfLife);
       expect(bucket).toBe(LifecycleBucket.LEGACY);

@@ -71,8 +71,10 @@ export function formatDate(date: Date | string, format = 'MMM dd, yyyy'): string
       options.month = 'short';
       options.day = '2-digit';
       break;
-    case 'yyyy-MM-dd':
-      return d.toISOString().split('T')[0];
+    case 'yyyy-MM-dd': {
+      const isoString = d.toISOString();
+      return isoString.split('T')[0] || '';
+    }
     case 'MMM dd, yyyy HH:mm':
       options.year = 'numeric';
       options.month = 'short';
@@ -144,10 +146,12 @@ export function debounce<T extends (...args: any[]) => any>(
   func: T,
   delay: number
 ): (...args: Parameters<T>) => void {
-  let timeoutId: NodeJS.Timeout;
+  let timeoutId: any;
   
   return (...args: Parameters<T>) => {
-    clearTimeout(timeoutId);
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
     timeoutId = setTimeout(() => func(...args), delay);
   };
 }

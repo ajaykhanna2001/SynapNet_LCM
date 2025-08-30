@@ -90,7 +90,7 @@ export class CalendarController {
       priority: Priority;
     }>,
   ) {
-    const data = { ...updateEventDto };
+    const data = { ...updateEventDto } as any;
     if (updateEventDto.startDate) {
       (data as any).startDate = new Date(updateEventDto.startDate);
     }
